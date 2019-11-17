@@ -2,6 +2,7 @@
 
 namespace App;
 
+
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -51,8 +52,6 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-
-
     public static function add($fillable){
         $post = new static();
         $post->fill($fillable);
@@ -77,6 +76,16 @@ class Post extends Model
         }
 
         return implode(', ', $this->tags()->pluck('title')->all());
+    }
+
+    public static function getCategories()
+    {
+        return Category::pluck('title', 'id')->all();
+    }
+
+    public static function getAllTags()
+    {
+        return Tag::pluck('title', 'id')->all();
     }
 
     public function setCategory($category)
@@ -166,7 +175,5 @@ class Post extends Model
         }
         Storage::delete('/public/upload/avatars/' . $this->image);
     }
-
-
 
 }

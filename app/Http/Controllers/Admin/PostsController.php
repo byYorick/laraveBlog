@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostsRequest;
 use App\Post;
 use App\Tag;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PostsController extends Controller
@@ -19,6 +20,7 @@ class PostsController extends Controller
     public function index()
     {
         $posts = Post::all();
+
         return view('admin.posts.index', compact('posts'));
     }
 
@@ -29,8 +31,8 @@ class PostsController extends Controller
      */
     public function create()
     {
-        $categories = Category::pluck('title', 'id')->all();
-        $tags = Tag::pluck('title', 'id')->all();
+        $categories = Post::getCategories();
+        $tags = Post::getAllTags();
 
         return view('admin.posts.create', compact('categories', 'tags'));
     }
@@ -54,16 +56,6 @@ class PostsController extends Controller
        return redirect()->route('posts.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -73,7 +65,13 @@ class PostsController extends Controller
      */
     public function edit($id)
     {
-        return view('admin.posts.edit');
+      $post = Post::find($id);
+      $categories = Post::getCategories();
+      $tags = Post::getAllTags();
+
+      $post->date = Carbon::parse($post->date)->format('d-m-y');
+
+      return view('admin.posts.edit', compact('post', 'categories', 'tags'));
     }
 
     /**
@@ -85,7 +83,7 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        dd($request);
     }
 
     /**
@@ -94,10 +92,10 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($slug)
+    public function destroy($id)
     {
 
-        $post = Post::where('slug', $slug)->first();
+        $post = Post::find($id);
         $post->removeImage();
         $post->delete();
 
