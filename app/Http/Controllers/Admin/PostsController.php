@@ -68,7 +68,7 @@ class PostsController extends Controller
       $post = Post::find($id);
       $categories = Post::getCategories();
       $tags = Post::getAllTags();
-
+      dd($post->date);
       $post->date = Carbon::parse($post->date)->format('d-m-y');
 
       return view('admin.posts.edit', compact('post', 'categories', 'tags'));

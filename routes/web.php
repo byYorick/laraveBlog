@@ -2,9 +2,6 @@
 
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function (){
     Route::get('/', 'MainController@index');
@@ -21,4 +18,5 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function (){
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/post/{slug}','HomeController@postView')->name('post');
